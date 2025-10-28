@@ -3,12 +3,6 @@
 
 ## Step-1: Build the Docker Images for Each Application
 
-#### Homepage
-cd homepage
-```
-docker build -t sapsecops/movieflix-micro:homepageV1 .
-```
-
 #### Movies
 cd movies
 ```
@@ -19,6 +13,11 @@ docker build -t sapsecops/movieflix-micro:moviesV1 .
 cd songs
 ```
 docker build -t sapsecops/movieflix-micro:songsV1 .
+```
+#### Homepage
+cd homepage
+```
+docker build -t sapsecops/movieflix-micro:homepageV1 .
 ```
 
 ## Step-2: Create private Docker network for our Movieflix Application
@@ -31,10 +30,9 @@ docker network create movieflix-network
 
 ## Step-3: Run the Container 
 
-##### Run the Homepage App Container
-```
-docker run -d --name homepage --network movieflix-network -p 80:80 sapsecops/movieflix-micro:homepageV1
-```
+Here we are using Microservice Application, in nginx.conf we use reverse proxy to the movies-app, songs-app, games-app
+
+So first we need to Launch that Applications --> Later we Deploy the Homepage Application
 
 ##### Run the Movies App Container
 ```
@@ -44,4 +42,8 @@ docker run -d --name movies-app --network movieflix-network sapsecops/movieflix-
 ##### Run the Songs App Container
 ```
 docker run -d --name songs-app --network movieflix-network sapsecops/movieflix-micro:songsV1
+```
+##### Run the Homepage App Container
+```
+docker run -d --name homepage --network movieflix-network -p 80:80 sapsecops/movieflix-micro:homepageV1
 ```
