@@ -17,7 +17,7 @@ sudo rm -rf *
 ## Get the Project Code
 ```
 cd /tmp
-git clone https://github.com/techizone-Small-Project-org/MovieFlix.git
+git clone https://github.com/digistackops-project-org/MovieFlix-Project.git
 cd movieflix
 git checkout movieflix-mono
 sudo mv * /usr/share/nginx/html
