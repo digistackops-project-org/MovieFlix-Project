@@ -1,0 +1,16 @@
+# Ignore the Git files that caused the warning in your previous attempt
+.git
+
+# Ignore any local configuration/environment files
+.env
+.local
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# If you were building a Node/Python/Java app, you'd add:
+# node_modules
+# venv
+# target
