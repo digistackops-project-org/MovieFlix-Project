@@ -1,105 +1,47 @@
-# Launch Infra for Movieflix Micrroservices
+## Project Structure
+<img width="206" height="250" alt="image" src="https://github.com/user-attachments/assets/2904e648-bf52-4696-98c0-04965300a4b2" />
 
+## Step-1: Build the Docker Images for Each Application
+
+#### Homepage
+cd homepage
 ```
-Launch 3 "t2.micro" Ec2 Instances 
+docker build -t sapsecops/movieflix-micro:homepageV1 .
 ```
 
-# Install Nginx
-### Using Amazon Linux 2 HERE 
-Login to all 3 Ec2 Instance and Install Nginx
-```
-sudo yum update -y
-sudo yum install git nginx -y
-sudo systemctl enable nginx
-sudo systemctl start nginx
-```
-# Setup Project
-## Remove Default Nginx Content
-Login to all 3 Ec2 Instance and Install Nginx
-```
-cd /usr/share/nginx/html
-sudo rm -rf *
-```
-## Get the Project Code
-
-### Steps at "Homepage" Instance
-```
-cd /tmp
-git clone https://github.com/digistackops-project-org/MovieFlix-Project.git
-cd MovieFlix
-sudo git checkout movieflix-micro
-sudo rm -rf games/ movies/ songs/
-sudo mv * /usr/share/nginx/html
-```
-### Steps at "Movies" Instance
-```
-cd /tmp
-git clone https://github.com/digistackops-project-org/MovieFlix-Project.git
-cd MovieFlix
-git checkout movieflix-micro
+#### Movies
 cd movies
-sudo mv * /usr/share/nginx/html
 ```
-### Steps at "Songs" Instance
+docker build -t sapsecops/movieflix-micro:moviesV1 .
 ```
-cd /tmp
-git clone https://github.com/digistackops-project-org/MovieFlix-Project.git
-cd MovieFlix
-git checkout movieflix-micro
+
+#### Songs
 cd songs
-sudo mv * /usr/share/nginx/html
+```
+docker build -t sapsecops/movieflix-micro:songsV1 .
 ```
 
-## Check your App Working or Not
+## Step-2: Create private Docker network for our Movieflix Application
 
+##### To connect containers without IPs, use a bridge network:
 ```
-http://<HomePage-Public-IP>/
-http://<Movies-Public-IP>/
-http://<songs-Public-IP>/
-```
-# Requirment ==> Host-Based Routing
-When we hit 
-```
-http://<Public-IP>/  ==> it will show Homepage
-http://<Public-IP>/songs  ==> it will show Songs Page
-http://<Public-IP>/movies  ==> it will show Movies page
-http://<Public-IP>/games  ==> it will show Games page
-```
-# Here we use "Reverse Proxy" Concept To achieve
-
-In nginx.conf file we need to mention the proxy_pass of the songs, movies, games
-
-```
-    location /movies/ {
-        proxy_pass http://<movies-private-IP>:80/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location /songs/ {
-        proxy_pass http://<songs-private-IP>:80/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+docker network create movieflix-network
 ```
 
-We  already have "nginx.conf" file so Copy that file in the Nginx PATH "/etc/nginx/nginx.conf"
 
+## Step-3: Run the Container 
+
+##### Run the Homepage App Container
 ```
-sudo mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
-sudo cp /usr/share/nginx/html/nginx.conf /etc/nginx/nginx.conf
-sudo systemctl restart nginx
+docker run -d --name homepage --network movieflix-network -p 80:80 sapsecops/movieflix-micro:homepageV1
 ```
 
-## Check your App Working or Not
-
+##### Run the Movies App Container
 ```
-http://<HomePage-Public-IP>/  ==> it will show Homepage
-http://<HomePage-Public-IP>/songs  ==> it will show Songs Page
-http://<HomePage-Public-IP>/movies  ==> it will show Movies page
-http://<HomePage-Public-IP>/games  ==> it will show Games page
+docker run -d --name movies-app --network movieflix-network sapsecops/movieflix-micro:moviesV1
+```
+
+##### Run the Songs App Container
+```
+docker run -d --name songs-app --network movieflix-network sapsecops/movieflix-micro:songsV1
 ```
