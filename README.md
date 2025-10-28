@@ -25,7 +25,7 @@ sudo rm -rf *
 ### Steps at "Homepage" Instance
 ```
 cd /tmp
-git clone https://github.com/techizone-Small-Project-org/MovieFlix.git
+git clone https://github.com/digistackops-project-org/MovieFlix-Project.git
 cd MovieFlix
 sudo git checkout movieflix-micro
 sudo rm -rf games/ movies/ songs/
@@ -34,7 +34,7 @@ sudo mv * /usr/share/nginx/html
 ### Steps at "Movies" Instance
 ```
 cd /tmp
-git clone https://github.com/techizone-Small-Project-org/MovieFlix.git
+git clone https://github.com/digistackops-project-org/MovieFlix-Project.git
 cd MovieFlix
 git checkout movieflix-micro
 cd movies
@@ -43,7 +43,7 @@ sudo mv * /usr/share/nginx/html
 ### Steps at "Songs" Instance
 ```
 cd /tmp
-git clone https://github.com/techizone-Small-Project-org/MovieFlix.git
+git clone https://github.com/digistackops-project-org/MovieFlix-Project.git
 cd MovieFlix
 git checkout movieflix-micro
 cd songs
